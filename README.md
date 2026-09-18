@@ -1,43 +1,53 @@
-# Blogify — Codomax Module 1
+# Blogify — Codomax Modules 1 & 2
 
-A modern, responsive blog application frontend built as part of the Codomax Digital Solutions **Full Stack Web Development Internship — Module 1 (Frontend Development)**.
+A responsive blog application built as a **Frontend + Backend** internship project for Codomax Digital Solutions.
 
-## ✨ Features
+## Module 1 — Frontend
 
-- Responsive blog landing page
-- Featured stories and topic categories
-- Login and registration interfaces
-- Client-side form validation
-- Password show/hide
-- Password strength indicator
-- Creator dashboard
-- Published / Draft story filters
-- Create Blog editor
-- Save drafts with browser `localStorage`
-- Publish demo posts with `localStorage`
-- Toast notifications
-- Responsive mobile navigation
-- Semantic, accessible HTML structure
+Built with HTML5, CSS3 and Vanilla JavaScript.
 
-## 🛠️ Technologies
+- Responsive Home / Explore page
+- Login and Register UI
+- Creator Dashboard
+- Create Blog page
+- Client-side validation
+- Responsive navigation
+- Local UI interactions
 
-- HTML5
-- CSS3
-- Vanilla JavaScript
-- Browser LocalStorage
-- Google Fonts
+## Module 2 — Backend
 
-## 📄 Pages
+A Node.js + Express REST API connected to the existing Blogify frontend.
 
-| Page | File | Purpose |
+### Backend capabilities
+
+- User registration
+- Password hashing with bcryptjs
+- User login
+- JWT authentication
+- Protected blog endpoints
+- Create published blogs
+- Save drafts
+- List current user's blogs
+- Update own blogs
+- Delete own blogs
+- Public published-blog endpoint
+- Health-check endpoint
+- CORS and JSON request handling
+
+### API routes
+
+| Method | Endpoint | Purpose |
 | --- | --- | --- |
-| Home | `index.html` | Explore featured stories and categories |
-| Login | `login.html` | Frontend login experience and validation |
-| Register | `register.html` | Account registration and password validation |
-| Dashboard | `dashboard.html` | Manage published stories and drafts |
-| Create Blog | `create-blog.html` | Write, save and publish a demo story |
+| GET | /api/health | API health check |
+| POST | /api/auth/register | Register a user |
+| POST | /api/auth/login | Login and receive JWT |
+| GET | /api/blogs | List published blogs |
+| GET | /api/blogs/my | List authenticated user's blogs |
+| POST | /api/blogs | Create a published blog or draft |
+| PUT | /api/blogs/:id | Update an owned blog |
+| DELETE | /api/blogs/:id | Delete an owned blog |
 
-## 📁 Project Structure
+## Project Structure
 
 ```text
 Codomax-Module-1-Blog/
@@ -50,40 +60,65 @@ Codomax-Module-1-Blog/
 │   └── style.css
 ├── js/
 │   └── app.js
-├── assets/
-│   └── images/
+├── backend/
+│   ├── package.json
+│   ├── server.js
+│   ├── data/
+│   │   └── db.json
+│   ├── middleware/
+│   │   └── auth.js
+│   ├── routes/
+│   │   ├── auth.js
+│   │   └── blogs.js
+│   └── utils/
+│       └── db.js
 └── README.md
 ```
 
-## 🚀 How to Run
+## How to Run
 
-1. Clone or download this repository.
-2. Open the folder in VS Code.
-3. Open `index.html` with **Live Server**.
-4. Test the navigation, forms, dashboard and Create Blog workflow.
+### 1. Install Node.js
 
-The project can also be opened directly by double-clicking `index.html`.
+Use a current LTS version of Node.js.
 
-## 📱 Responsive Design
+### 2. Install backend dependencies
 
-The interface is designed to adapt across:
+Open a terminal in the `backend` folder:
 
-- Mobile
-- Tablet
-- Laptop
-- Desktop
+```bash
+npm install
+```
 
-The layout, navigation, cards, forms and dashboard adjust for smaller screens.
+### 3. Start the API
 
-## 🧩 Frontend Demo Note
+```bash
+npm start
+```
 
-This module is intentionally frontend-only. Login, registration, publishing and draft storage are simulated in the browser using JavaScript and LocalStorage. There is **no production authentication, backend API or database** in Module 1.
+The app and API will be available at:
 
-## 🎓 Internship
+- http://localhost:5000
+- http://localhost:5000/api/health
 
-Developed for **Module 1 — Frontend Development** of the Codomax Digital Solutions Full Stack Web Development Internship.
+### 4. Test the application
 
-## 👨‍💻 Author
+Open http://localhost:5000 in your browser.
+
+Register a new account, login, create a blog, save a draft, then open the dashboard to see the data returned from the backend.
+
+## Data storage
+
+For this internship project, data is persisted in `backend/data/db.json`. Passwords are stored as bcrypt hashes rather than plain text.
+
+## Security note
+
+The project uses a development JWT secret in code as a simple internship demonstration. For a real production deployment, the secret should be stored in an environment variable and additional security controls should be added.
+
+## Internship
+
+Developed for **Codomax Digital Solutions — Full Stack Web Development Internship, Module 1 and Module 2**.
+
+## Author
 
 **Om Talekar**
 
