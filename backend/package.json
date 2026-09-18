@@ -1,0 +1,16 @@
+{
+  "name": "blogify-backend",
+  "version": "1.0.0",
+  "description": "Backend API for the Blogify Codomax Module 2 internship project",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.2",
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2"
+  }
+}
