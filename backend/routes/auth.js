@@ -3,7 +3,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { randomUUID } from "node:crypto";
 import { readDb, writeDb, publicUser } from "../utils/db.js";
-import { JWT_SECRET } from "../middleware/auth.js";
+import { JWT_SECRET, requireAuth } from "../middleware/auth.js";
 
 const router = express.Router();
 
@@ -91,8 +91,8 @@ router.post("/login", async (req, res) => {
   }
 });
 
-router.get("/me", (_req, res) => {
-  return res.json({ message: "Use a valid token with the protected endpoints." });
+router.get("/me", requireAuth, (req, res) => {
+  return res.json({ user: req.user });
 });
 
 export default router;
