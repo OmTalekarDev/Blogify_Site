@@ -1,8 +1,12 @@
 import jwt from "jsonwebtoken";
 
-const JWT_SECRET = process.env.JWT_SECRET || "blogify-development-secret-change-me";
+const JWT_SECRET = process.env.JWT_SECRET;
 
 export function requireAuth(req, res, next) {
+  if (!JWT_SECRET) {
+    return res.status(500).json({ message: "JWT_SECRET is not configured." });
+  }
+
   const header = req.headers.authorization || "";
   const [scheme, token] = header.split(" ");
 
@@ -17,5 +21,3 @@ export function requireAuth(req, res, next) {
     return res.status(401).json({ message: "Invalid or expired token." });
   }
 }
-
-export { JWT_SECRET };
