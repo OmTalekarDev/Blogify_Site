@@ -319,7 +319,8 @@ document.addEventListener("DOMContentLoaded", () => {
             '<div class="post-body"><div class="meta">' +
             new Date(blog.createdAt).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" }) +
             '</div><h3>' + escapeHtml(blog.title) + '</h3><p>' + escapeHtml(blog.description) + '</p>' +
-            '<div class="author-row"><span class="author-avatar">' +
+            '<a class="text-link" href="blog.html?id=' + encodeURIComponent(blog.id) + '">Read article →</a>' +
+            '<div class="author-row"><span class="author-avatar">'
             escapeHtml((blog.authorName || "BU").split(" ").map(x => x[0]).join("").slice(0, 2).toUpperCase()) +
             '</span><span><strong>' + escapeHtml(blog.authorName) + '</strong><small>' + escapeHtml(blog.category) + '</small></span></div></div>';
           homeGrid.prepend(card);
