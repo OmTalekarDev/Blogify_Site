@@ -1,48 +1,57 @@
-# Blogify — Codomax Modules 1 & 2
+# Blogify — Codomax Full Stack Internship
 
-A responsive blog application built as a **Frontend + Backend** internship project for Codomax Digital Solutions.
+A modern responsive blog application built for the **Codomax Digital Solutions Full Stack Web Development Internship**.
 
-## Module 1 — Frontend
-
-Built with HTML5, CSS3 and Vanilla JavaScript.
+## Module 1 — Frontend Development
 
 - Responsive Home / Explore page
-- Login and Register UI
+- Login and registration UI
 - Creator Dashboard
 - Create Blog page
 - Client-side validation
+- Light / Dark theme toggle
 - Responsive navigation
-- Local UI interactions
 
-## Module 2 — Backend
+## Module 2 — Backend Development
 
-A Node.js + Express REST API connected to the existing Blogify frontend.
-
-### Backend capabilities
-
-- User registration
-- Password hashing with bcryptjs
-- User login
+- Node.js + Express REST API
+- User registration and login
+- bcrypt password hashing
 - JWT authentication
 - Protected blog endpoints
-- Create published blogs
-- Save drafts
-- List current user's blogs
-- Update own blogs
-- Delete own blogs
-- Public published-blog endpoint
-- Health-check endpoint
-- CORS and JSON request handling
+- Create published blogs and drafts
+- User-specific dashboard data
+- Delete owned blogs
+- Frontend ↔ backend API integration
+
+## Module 3 — Database Integration
+
+The application is upgraded to use **MongoDB through Mongoose**.
+
+### Database work
+
+- MongoDB connection through an environment variable
+- Mongoose User and Blog schemas
+- Unique user email index
+- User passwords stored only as bcrypt hashes
+- Blog documents stored with author references
+- Published blogs retrieved from MongoDB
+- Authenticated user's blogs retrieved from MongoDB
+- Individual public blog details page
+- MongoDB-backed blog creation, updates and deletion
+- Database connection health reporting
 
 ### API routes
 
 | Method | Endpoint | Purpose |
 | --- | --- | --- |
-| GET | /api/health | API health check |
+| GET | /api/health | API and database health check |
 | POST | /api/auth/register | Register a user |
 | POST | /api/auth/login | Login and receive JWT |
-| GET | /api/blogs | List published blogs |
-| GET | /api/blogs/my | List authenticated user's blogs |
+| GET | /api/auth/me | Get authenticated user |
+| GET | /api/blogs | Retrieve published blogs |
+| GET | /api/blogs/my | Retrieve current user's blogs |
+| GET | /api/blogs/:id | Retrieve an individual published blog |
 | POST | /api/blogs | Create a published blog or draft |
 | PUT | /api/blogs/:id | Update an owned blog |
 | DELETE | /api/blogs/:id | Delete an owned blog |
@@ -56,67 +65,89 @@ Codomax-Module-1-Blog/
 ├── register.html
 ├── dashboard.html
 ├── create-blog.html
+├── blog.html
 ├── css/
-│   └── style.css
+│   ├── style.css
+│   └── theme.css
 ├── js/
-│   └── app.js
-├── backend/
-│   ├── package.json
-│   ├── server.js
-│   ├── data/
-│   │   └── db.json
-│   ├── middleware/
-│   │   └── auth.js
-│   ├── routes/
-│   │   ├── auth.js
-│   │   └── blogs.js
-│   └── utils/
-│       └── db.js
-└── README.md
+│   ├── app.js
+│   └── theme.js
+└── backend/
+    ├── package.json
+    ├── server.js
+    ├── .env.example
+    ├── .gitignore
+    ├── config/
+    │   └── db.js
+    ├── models/
+    │   ├── User.js
+    │   └── Blog.js
+    ├── middleware/
+    │   └── auth.js
+    └── routes/
+        ├── auth.js
+        └── blogs.js
 ```
 
 ## How to Run
 
 ### 1. Install Node.js
 
-Use a current LTS version of Node.js.
+Use a current LTS version.
 
-### 2. Install backend dependencies
+### 2. Configure MongoDB
 
-Open a terminal in the `backend` folder:
+Create a MongoDB deployment (MongoDB Atlas or a local MongoDB server).
+
+In `backend/`, copy:
+
+```text
+.env.example → .env
+```
+
+Set:
+
+```env
+PORT=5000
+MONGODB_URI=your-mongodb-connection-string
+JWT_SECRET=your-long-random-secret
+```
+
+Never commit the real `.env` file.
+
+### 3. Install dependencies
 
 ```bash
+cd backend
 npm install
 ```
 
-### 3. Start the API
+### 4. Start the application
 
 ```bash
 npm start
 ```
 
-The app and API will be available at:
+Open:
 
 - http://localhost:5000
 - http://localhost:5000/api/health
 
-### 4. Test the application
+### 5. Test Module 3
 
-Open http://localhost:5000 in your browser.
+Register a user, log in, create a blog, save a draft, open the dashboard and then open a published story through **Read article →**.
 
-Register a new account, login, create a blog, save a draft, then open the dashboard to see the data returned from the backend.
+## Security Notes
 
-## Data storage
-
-For this internship project, data is persisted in `backend/data/db.json`. Passwords are stored as bcrypt hashes rather than plain text.
-
-## Security note
-
-The project uses a development JWT secret in code as a simple internship demonstration. For a real production deployment, the secret should be stored in an environment variable and additional security controls should be added.
+- MongoDB credentials are loaded from environment variables.
+- `.env` is ignored by Git.
+- Passwords are hashed with bcrypt before persistence.
+- JWT signing uses an environment-provided secret.
+- Private blog management routes require JWT authentication.
 
 ## Internship
 
-Developed for **Codomax Digital Solutions — Full Stack Web Development Internship, Module 1 and Module 2**.
+Developed for **Codomax Digital Solutions — Full Stack Web Development Internship, Modules 1–3**.
 
 ## Author
 
