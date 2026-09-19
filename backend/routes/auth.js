@@ -1,15 +1,16 @@
 import express from "express";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import { randomUUID } from "node:crypto";
-import { readDb, writeDb, publicUser } from "../utils/db.js";
-import { JWT_SECRET, requireAuth } from "../middleware/auth.js";
+import { User } from "../models/User.js";
+import { requireAuth } from "../middleware/auth.js";
 
 const router = express.Router();
+const JWT_SECRET = process.env.JWT_SECRET;
 
 function signToken(user) {
+  if (!JWT_SECRET) throw new Error("JWT_SECRET is missing.");
   return jwt.sign(
-    { id: user.id, name: user.name, email: user.email },
+    { id: user._id.toString(), name: user.name, email: user.email },
     JWT_SECRET,
     { expiresIn: "7d" }
   );
@@ -17,6 +18,15 @@ function signToken(user) {
 
 function normalizeEmail(email = "") {
   return String(email).trim().toLowerCase();
+}
+
+function publicUser(user) {
+  return {
+    id: user._id.toString(),
+    name: user.name,
+    email: user.email,
+    createdAt: user.createdAt
+  };
 }
 
 router.post("/register", async (req, res) => {
@@ -32,28 +42,21 @@ router.post("/register", async (req, res) => {
     }
 
     const normalizedEmail = normalizeEmail(email);
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalizedEmail)) {
+    if (!/^\S+@\S+\.\S+$/.test(normalizedEmail)) {
       return res.status(400).json({ message: "Please provide a valid email address." });
     }
 
-    const db = await readDb();
-    const exists = db.users.some(user => user.email === normalizedEmail);
-
-    if (exists) {
+    const existing = await User.findOne({ email: normalizedEmail });
+    if (existing) {
       return res.status(409).json({ message: "An account with this email already exists." });
     }
 
     const passwordHash = await bcrypt.hash(password, 12);
-    const user = {
-      id: randomUUID(),
+    const user = await User.create({
       name: name.trim(),
       email: normalizedEmail,
-      passwordHash,
-      createdAt: new Date().toISOString()
-    };
-
-    db.users.push(user);
-    await writeDb(db);
+      passwordHash
+    });
 
     return res.status(201).json({
       message: "Registration successful.",
@@ -73,8 +76,9 @@ router.post("/login", async (req, res) => {
       return res.status(400).json({ message: "Email and password are required." });
     }
 
-    const db = await readDb();
-    const user = db.users.find(item => item.email === normalizeEmail(email));
+    const user = await User.findOne({
+      email: normalizeEmail(email)
+    }).select("+passwordHash");
 
     if (!user || !(await bcrypt.compare(password, user.passwordHash))) {
       return res.status(401).json({ message: "Invalid email or password." });
@@ -91,8 +95,10 @@ router.post("/login", async (req, res) => {
   }
 });
 
-router.get("/me", requireAuth, (req, res) => {
-  return res.json({ user: req.user });
+router.get("/me", requireAuth, async (req, res) => {
+  const user = await User.findById(req.user.id);
+  if (!user) return res.status(404).json({ message: "User not found." });
+  return res.json({ user: publicUser(user) });
 });
 
 export default router;
