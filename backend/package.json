@@ -1,7 +1,7 @@
 {
   "name": "blogify-backend",
-  "version": "1.0.0",
-  "description": "Backend API for the Blogify Codomax Module 2 internship project",
+  "version": "1.2.0",
+  "description": "Node.js + Express + MongoDB backend for the Blogify Codomax internship project",
   "type": "module",
   "main": "server.js",
   "scripts": {
@@ -10,7 +10,9 @@
   "dependencies": {
     "bcryptjs": "^3.0.2",
     "cors": "^2.8.5",
+    "dotenv": "^17.4.2",
     "express": "^5.1.0",
-    "jsonwebtoken": "^9.0.2"
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^9.10.1"
   }
 }
