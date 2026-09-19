@@ -1,7 +1,9 @@
+import "dotenv/config";
 import express from "express";
 import cors from "cors";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { connectDB } from "./config/db.js";
 import authRoutes from "./routes/auth.js";
 import blogRoutes from "./routes/blogs.js";
 
@@ -18,6 +20,7 @@ app.get("/api/health", (_req, res) => {
   res.json({
     status: "ok",
     service: "Blogify API",
+    database: "MongoDB",
     timestamp: new Date().toISOString()
   });
 });
@@ -32,7 +35,16 @@ app.use((err, _req, res, _next) => {
   res.status(500).json({ message: "Unexpected server error." });
 });
 
-app.listen(PORT, () => {
-  console.log("Blogify is running at http://localhost:" + PORT);
-  console.log("Health check: http://localhost:" + PORT + "/api/health");
+async function startServer() {
+  await connectDB();
+  app.listen(PORT, () => {
+    console.log("Blogify is running at http://localhost:" + PORT);
+    console.log("MongoDB connection established.");
+    console.log("Health check: http://localhost:" + PORT + "/api/health");
+  });
+}
+
+startServer().catch(error => {
+  console.error("Startup failed:", error.message);
+  process.exit(1);
 });
