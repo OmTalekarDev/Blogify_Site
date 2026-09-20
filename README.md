@@ -62,7 +62,7 @@ The Blogify dashboard now provides the complete CRUD workflow:
 ## Project Structure
 
 ```text
-Codomax-Module-1-Blog/
+Blogify_Site/
 ├── index.html
 ├── login.html
 ├── register.html
@@ -113,20 +113,22 @@ npm install
 npm start
 ```
 
-Open:
+Then open:
 
 - http://localhost:5000
 - http://localhost:5000/api/health
 
-### 4. Test Module 4
+## Verify CRUD Features
+
+After the application is running:
 
 1. Register or log in.
 2. Create and publish a blog.
 3. Save another blog as a draft.
-4. Open Dashboard and use **Edit** to update a story.
+4. Open the Dashboard and use **Edit** to update a story.
 5. Use **View** to open a published story.
 6. Use **Delete** to remove an owned story.
-7. Search by title/category/tags and switch between status filters.
+7. Search by title, description, category or tags and switch between status filters.
 
 ## Security Notes
 
