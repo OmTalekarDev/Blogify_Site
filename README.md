@@ -59,6 +59,19 @@ The Blogify dashboard now provides the complete CRUD workflow:
 | PUT | /api/blogs/:id | Update an owned blog |
 | DELETE | /api/blogs/:id | Delete an owned blog |
 
+## Module 5 — Authentication & Dashboard
+
+The application now includes a protected account and dashboard workflow:
+
+- JWT authentication is verified against the backend for private pages
+- Private Dashboard and Create Blog pages redirect unauthenticated users to Login
+- `GET /api/auth/me` verifies the current JWT and returns the signed-in user's profile
+- Dashboard displays the authenticated user's account details
+- Dedicated Profile page shows account information and session status
+- Logout clears the client-side JWT and user session data
+- User-specific blog data remains protected through authenticated API routes
+
+
 ## Project Structure
 
 ```text
@@ -140,7 +153,7 @@ After the application is running:
 
 ## Internship
 
-Developed for **Codomax Digital Solutions — Full Stack Web Development Internship, Modules 1–4**.
+Developed for **Codomax Digital Solutions — Full Stack Web Development Internship, Modules 1–5**.
 
 ## Author
 
