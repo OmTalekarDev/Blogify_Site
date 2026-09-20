@@ -106,6 +106,11 @@ document.addEventListener("DOMContentLoaded", () => {
         document.querySelectorAll("[data-user-email]").forEach(el => {
           el.textContent = data.user.email;
         });
+        document.getElementById("dashboard-profile-initials")?.replaceChildren(
+          document.createTextNode(
+            data.user.name.split(" ").map(part => part[0]).join("").slice(0, 2).toUpperCase()
+          )
+        );
       })
       .catch(error => {
         if (error.status === 401 || error.status === 404) {
@@ -229,6 +234,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const user = data.user;
         document.getElementById("profile-name").textContent = user.name;
         document.getElementById("profile-email").textContent = user.email;
+        document.getElementById("profile-email-detail").textContent = user.email;
         document.getElementById("profile-joined").textContent = formatDate(user.createdAt);
         document.getElementById("profile-initials").textContent = user.name
           .split(" ")
