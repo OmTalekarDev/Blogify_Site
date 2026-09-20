@@ -12,6 +12,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const getToken = () => localStorage.getItem("blogifyToken");
 
+  const getStoredUser = () => {
+    try {
+      return JSON.parse(localStorage.getItem("blogifyUser") || "null");
+    } catch {
+      return null;
+    }
+  };
+
+  const logout = () => {
+    localStorage.removeItem("blogifyToken");
+    localStorage.removeItem("blogifyUser");
+    location.href = "login.html";
+  };
+
   async function api(path, options = {}) {
     const headers = { "Content-Type": "application/json", ...(options.headers || {}) };
     const token = getToken();
@@ -63,12 +77,43 @@ document.addEventListener("DOMContentLoaded", () => {
     if (link.textContent.trim().toLowerCase().includes("log out")) {
       link.addEventListener("click", e => {
         e.preventDefault();
-        localStorage.removeItem("blogifyToken");
-        localStorage.removeItem("blogifyUser");
-        location.href = "login.html";
+        logout();
       });
     }
   });
+  document.querySelectorAll("[data-logout]").forEach(button => {
+    button.addEventListener("click", e => {
+      e.preventDefault();
+      logout();
+    });
+  });
+
+
+  // Module 5: protect private pages and verify the JWT with the backend.
+  if (document.body.dataset.private === "true") {
+    if (!getToken()) {
+      toast("Please login to access this page.");
+      setTimeout(() => location.href = "login.html", 500);
+      return;
+    }
+
+    api("/auth/me")
+      .then(data => {
+        localStorage.setItem("blogifyUser", JSON.stringify(data.user));
+        document.querySelectorAll("[data-user-name]").forEach(el => {
+          el.textContent = data.user.name;
+        });
+        document.querySelectorAll("[data-user-email]").forEach(el => {
+          el.textContent = data.user.email;
+        });
+      })
+      .catch(error => {
+        if (error.status === 401 || error.status === 404) {
+          toast("Your session has expired. Please login again.");
+          setTimeout(logout, 700);
+        }
+      });
+  }
 
   // Password visibility
   document.querySelectorAll(".password-toggle").forEach(btn => {
@@ -174,6 +219,30 @@ document.addEventListener("DOMContentLoaded", () => {
       toast(error.message);
     }
   });
+
+
+  // Module 5: user profile
+  const profileCard = document.getElementById("profile-card");
+  if (profileCard) {
+    api("/auth/me")
+      .then(data => {
+        const user = data.user;
+        document.getElementById("profile-name").textContent = user.name;
+        document.getElementById("profile-email").textContent = user.email;
+        document.getElementById("profile-joined").textContent = formatDate(user.createdAt);
+        document.getElementById("profile-initials").textContent = user.name
+          .split(" ")
+          .map(part => part[0])
+          .join("")
+          .slice(0, 2)
+          .toUpperCase();
+        localStorage.setItem("blogifyUser", JSON.stringify(user));
+      })
+      .catch(error => {
+        if (error.status === 401 || error.status === 404) logout();
+        else toast(error.message);
+      });
+  }
 
   // Create / Edit Blog
   const blogForm = document.getElementById("blog-form");
