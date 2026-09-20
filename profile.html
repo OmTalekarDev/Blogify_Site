@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profile — Blogify</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/theme.css">
+</head>
+<body data-page="profile" data-private="true">
+  <header class="site-header">
+    <nav class="navbar container">
+      <a class="brand" href="index.html"><span class="brand-mark">B</span><span>Blogify</span></a>
+      <button class="theme-toggle" type="button" aria-label="Toggle theme" title="Toggle theme">☾</button>
+      <button class="menu-toggle" aria-label="Toggle navigation" aria-expanded="false">☰</button>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="index.html#explore">Explore</a>
+        <a href="dashboard.html">Dashboard</a>
+        <a href="create-blog.html">Create Blog</a>
+        <a class="active" href="profile.html">Profile</a>
+        <span class="nav-divider"></span>
+        <a href="login.html">Log out</a>
+      </div>
+    </nav>
+  </header>
+
+  <main class="profile-page container">
+    <div class="profile-head">
+      <div>
+        <span class="eyebrow">Account center</span>
+        <h1>Your profile.</h1>
+        <p>Your authenticated Blogify account details and session controls.</p>
+      </div>
+      <a class="btn btn-ghost" href="dashboard.html">← Dashboard</a>
+    </div>
+
+    <section class="profile-card" id="profile-card">
+      <div class="profile-identity">
+        <div class="profile-avatar profile-avatar-large" id="profile-initials">OT</div>
+        <div>
+          <span class="eyebrow">Authenticated user</span>
+          <h2 id="profile-name">Loading…</h2>
+          <p id="profile-email">Loading account details…</p>
+        </div>
+      </div>
+
+      <div class="profile-details">
+        <div><span>Account email</span><strong id="profile-email-detail">Private account</strong></div>
+        <div><span>Member since</span><strong id="profile-joined">Loading…</strong></div>
+        <div><span>Authentication</span><strong>JWT protected</strong></div>
+        <div><span>Dashboard access</span><strong>Private</strong></div>
+      </div>
+
+      <div class="profile-actions">
+        <a class="btn" href="dashboard.html">Open Dashboard →</a>
+        <button class="btn btn-ghost" type="button" data-logout>Log out</button>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <span>Blogify Profile</span>
+      <p>Codomax Module 5 · Authentication & Dashboard</p>
+    </div>
+  </footer>
+
+  <div id="toast" class="toast" role="status"></div>
+  <script src="js/theme.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
