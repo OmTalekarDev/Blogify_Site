@@ -2,7 +2,7 @@
 
 A modern responsive blog application built for the **Codomax Digital Solutions Full Stack Web Development Internship**.
 
-## Module 1 — Frontend Development
+## Module 1 Frontend Development
 
 - Responsive Home / Explore page
 - Login and registration UI
@@ -12,7 +12,7 @@ A modern responsive blog application built for the **Codomax Digital Solutions F
 - Light / Dark theme toggle
 - Responsive navigation
 
-## Module 2 — Backend Development
+## Module 2 Backend Development
 
 - Node.js + Express REST API
 - User registration and login
@@ -22,7 +22,7 @@ A modern responsive blog application built for the **Codomax Digital Solutions F
 - Create published blogs and drafts
 - User-specific dashboard data
 
-## Module 3 — Database Integration
+## Module 3 Database Integration
 
 The application uses **MongoDB through Mongoose**.
 
@@ -35,7 +35,7 @@ The application uses **MongoDB through Mongoose**.
 - Authenticated user's blogs retrieved from MongoDB
 - Individual public blog details page
 
-## Module 4 — CRUD Operations
+## Module 4 CRUD Operations
 
 The Blogify dashboard now provides the complete CRUD workflow:
 
@@ -59,7 +59,7 @@ The Blogify dashboard now provides the complete CRUD workflow:
 | PUT | /api/blogs/:id | Update an owned blog |
 | DELETE | /api/blogs/:id | Delete an owned blog |
 
-## Module 5 — Authentication & Dashboard
+## Module 5 Authentication & Dashboard
 
 The application now includes a protected account and dashboard workflow:
 
