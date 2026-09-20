@@ -21,14 +21,10 @@ A modern responsive blog application built for the **Codomax Digital Solutions F
 - Protected blog endpoints
 - Create published blogs and drafts
 - User-specific dashboard data
-- Delete owned blogs
-- Frontend ↔ backend API integration
 
 ## Module 3 — Database Integration
 
-The application is upgraded to use **MongoDB through Mongoose**.
-
-### Database work
+The application uses **MongoDB through Mongoose**.
 
 - MongoDB connection through an environment variable
 - Mongoose User and Blog schemas
@@ -38,17 +34,24 @@ The application is upgraded to use **MongoDB through Mongoose**.
 - Published blogs retrieved from MongoDB
 - Authenticated user's blogs retrieved from MongoDB
 - Individual public blog details page
-- MongoDB-backed blog creation, updates and deletion
-- Database connection health reporting
 
-### API routes
+## Module 4 — CRUD Operations
+
+The Blogify dashboard now provides the complete CRUD workflow:
+
+- **Create** — publish a new blog or save a draft
+- **Read** — retrieve and display published blogs and the authenticated user's blogs
+- **Update** — edit an owned blog and save the changes through the API
+- **Delete** — permanently delete an owned blog after confirmation
+- Search blogs by title, description, category or tags
+- Filter stories by All, Published and Draft status
+- View published stories directly from the dashboard
+- Responsive CRUD controls with light / dark theme support
+
+### CRUD API routes
 
 | Method | Endpoint | Purpose |
 | --- | --- | --- |
-| GET | /api/health | API and database health check |
-| POST | /api/auth/register | Register a user |
-| POST | /api/auth/login | Login and receive JWT |
-| GET | /api/auth/me | Get authenticated user |
 | GET | /api/blogs | Retrieve published blogs |
 | GET | /api/blogs/my | Retrieve current user's blogs |
 | GET | /api/blogs/:id | Retrieve an individual published blog |
@@ -91,38 +94,20 @@ Codomax-Module-1-Blog/
 
 ## How to Run
 
-### 1. Install Node.js
+### 1. Configure MongoDB
 
-Use a current LTS version.
-
-### 2. Configure MongoDB
-
-Create a MongoDB deployment (MongoDB Atlas or a local MongoDB server).
-
-In `backend/`, copy:
-
-```text
-.env.example → .env
-```
-
-Set:
-
-```env
-PORT=5000
-MONGODB_URI=your-mongodb-connection-string
-JWT_SECRET=your-long-random-secret
-```
+In `backend/`, create `.env` from `.env.example` and set your private MongoDB URI and JWT secret.
 
 Never commit the real `.env` file.
 
-### 3. Install dependencies
+### 2. Install dependencies
 
 ```bash
 cd backend
 npm install
 ```
 
-### 4. Start the application
+### 3. Start the application
 
 ```bash
 npm start
@@ -133,9 +118,15 @@ Open:
 - http://localhost:5000
 - http://localhost:5000/api/health
 
-### 5. Test Module 3
+### 4. Test Module 4
 
-Register a user, log in, create a blog, save a draft, open the dashboard and then open a published story through **Read article →**.
+1. Register or log in.
+2. Create and publish a blog.
+3. Save another blog as a draft.
+4. Open Dashboard and use **Edit** to update a story.
+5. Use **View** to open a published story.
+6. Use **Delete** to remove an owned story.
+7. Search by title/category/tags and switch between status filters.
 
 ## Security Notes
 
@@ -143,11 +134,11 @@ Register a user, log in, create a blog, save a draft, open the dashboard and the
 - `.env` is ignored by Git.
 - Passwords are hashed with bcrypt before persistence.
 - JWT signing uses an environment-provided secret.
-- Private blog management routes require JWT authentication.
+- Blog update/delete routes require JWT authentication and ownership.
 
 ## Internship
 
-Developed for **Codomax Digital Solutions — Full Stack Web Development Internship, Modules 1–3**.
+Developed for **Codomax Digital Solutions — Full Stack Web Development Internship, Modules 1–4**.
 
 ## Author
 
