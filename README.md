@@ -1,4 +1,4 @@
-# Blogify — Codomax Full Stack Internship
+# Blogify Codomax Full Stack Internship
 
 A modern responsive blog application built for the **Codomax Digital Solutions Full Stack Web Development Internship**.
 
