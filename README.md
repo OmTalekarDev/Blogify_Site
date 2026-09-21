@@ -151,6 +151,30 @@ After the application is running:
 - JWT signing uses an environment-provided secret.
 - Blog update/delete routes require JWT authentication and ownership.
 
+## Module 6 — Final Project & Deployment
+
+Module 6 prepares Blogify for a production-style deployment:
+
+- Production-ready relative API URLs for the frontend
+- Express server binds to `0.0.0.0` for public hosting
+- Dedicated Render deployment configuration in `render.yaml`
+- Health check available at `/api/health`
+- Environment variables kept outside the repository
+- Final UI, authentication, dashboard, CRUD and blog-detail workflows consolidated in one full-stack project
+
+### Deploy on Render
+
+1. Create a **Web Service** from this GitHub repository.
+2. Set the **Root Directory** to `backend`.
+3. Use **Build Command**: `npm install`.
+4. Use **Start Command**: `npm start`.
+5. Add `MONGODB_URI` and `JWT_SECRET` as environment variables.
+6. Deploy and verify `https://<your-service>.onrender.com/api/health`.
+7. Use the generated `onrender.com` URL as the Live Website Link for the internship submission.
+
+Render supports Express/Node web services, build and start commands, health checks, and runtime environment variables. See the official Render documentation for the current setup flow.
+
+
 ## Internship
 
 Developed for **Codomax Digital Solutions — Full Stack Web Development Internship, Modules 1–5**.
