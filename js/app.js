@@ -1,4 +1,4 @@
-const API_BASE = "http://localhost:5000/api";
+const API_BASE = window.location.protocol === "file:" ? "http://localhost:5000/api" : "/api";
 
 document.addEventListener("DOMContentLoaded", () => {
   const toast = (message) => {
@@ -146,9 +146,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const email = document.getElementById("login-email");
     const password = document.getElementById("login-password");
 
-    if (!email.validity.valid || password.value.length < 6) {
+    if (!email.validity.valid || password.value.length < 8) {
       if (!email.validity.valid) email.closest("label").querySelector(".field-error").textContent = "Enter a valid email address.";
-      if (password.value.length < 6) password.closest("label").querySelector(".field-error").textContent = "Password must be at least 6 characters.";
+      if (password.value.length < 8) password.closest("label").querySelector(".field-error").textContent = "Password must be at least 8 characters.";
       return;
     }
 
