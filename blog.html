@@ -40,7 +40,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     return;
   }
   try {
-    const res = await fetch("http://localhost:5000/api/blogs/" + encodeURIComponent(id));
+    const res = await fetch("/api/blogs/" + encodeURIComponent(id));
     const data = await res.json();
     if (!res.ok) throw new Error(data.message || "Unable to load story.");
     const blog = data.blog;
