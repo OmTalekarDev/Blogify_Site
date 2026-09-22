@@ -484,4 +484,101 @@ document.addEventListener("DOMContentLoaded", () => {
         // Static sample stories remain visible when the API isn't running.
       });
   }
+
+  // Motion system: scroll reveal, magnetic buttons, tilt, pointer spotlight, page transitions.
+  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  if (!reducedMotion) {
+    const transition = document.createElement("div");
+    transition.className = "page-transition";
+    document.body.appendChild(transition);
+    requestAnimationFrame(() => transition.classList.add("out"));
+
+    document.querySelectorAll("a[href]").forEach(link => {
+      const href = link.getAttribute("href");
+      if (!href || href.startsWith("#") || href.startsWith("mailto:") || href.startsWith("tel:") || link.target === "_blank") return;
+      if (href.startsWith("http") && !href.startsWith(location.origin)) return;
+      link.addEventListener("click", event => {
+        const target = link.href;
+        if (!target || target === location.href) return;
+        event.preventDefault();
+        transition.classList.remove("out");
+        transition.classList.add("in");
+        setTimeout(() => { location.href = target; }, 420);
+      });
+    });
+
+    const glow = document.createElement("div");
+    glow.className = "cursor-glow";
+    document.body.appendChild(glow);
+    document.addEventListener("mousemove", event => {
+      const x = event.clientX;
+      const y = event.clientY;
+      document.documentElement.style.setProperty("--mx", x + "px");
+      document.documentElement.style.setProperty("--my", y + "px");
+      glow.style.left = x + "px";
+      glow.style.top = y + "px";
+
+      const card = event.target.closest?.(".blog-card,.category-grid a,.stat-card,.side-card,.auth-card,.profile-card");
+      if (card) {
+        const rect = card.getBoundingClientRect();
+        card.style.setProperty("--card-x", ((x - rect.left) / rect.width * 100) + "%");
+        card.style.setProperty("--card-y", ((y - rect.top) / rect.height * 100) + "%");
+      }
+    }, { passive: true });
+
+    document.querySelectorAll("a.btn, button.btn, .theme-toggle").forEach(el => {
+      el.addEventListener("mouseenter", () => glow.classList.add("hover"));
+      el.addEventListener("mouseleave", () => {
+        glow.classList.remove("hover");
+        el.style.transform = "";
+      });
+      el.addEventListener("mousemove", event => {
+        const rect = el.getBoundingClientRect();
+        const dx = (event.clientX - (rect.left + rect.width / 2)) / rect.width;
+        const dy = (event.clientY - (rect.top + rect.height / 2)) / rect.height;
+        el.style.transform = "translate(" + (dx * 8) + "px," + (dy * 8) + "px)";
+      });
+    });
+
+    document.querySelectorAll(".hero-card").forEach(card => {
+      card.addEventListener("mousemove", event => {
+        const rect = card.getBoundingClientRect();
+        const px = (event.clientX - rect.left) / rect.width - .5;
+        const py = (event.clientY - rect.top) / rect.height - .5;
+        card.style.transform = "perspective(900px) rotateX(" + (-py * 5) + "deg) rotateY(" + (px * 7) + "deg) translateY(-2px) rotateZ(-1deg)";
+      });
+      card.addEventListener("mouseleave", () => { card.style.transform = ""; });
+    });
+
+    document.querySelectorAll(".hero-art").forEach(art => {
+      art.addEventListener("mousemove", event => {
+        const rect = art.getBoundingClientRect();
+        const px = (event.clientX - rect.left) / rect.width - .5;
+        const py = (event.clientY - rect.top) / rect.height - .5;
+        art.querySelectorAll(".orb").forEach((orb, index) => {
+          const depth = index === 0 ? 10 : -7;
+          orb.style.transform = "translate(" + (px * depth) + "px," + (py * depth) + "px)";
+        });
+      });
+    });
+
+    const reveals = document.querySelectorAll(".section, .categories, .newsletter, .dash-panel, .stat-grid, .editor-layout, .profile-strip");
+    reveals.forEach(el => el.classList.add("reveal"));
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("is-visible");
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: .12, rootMargin: "0px 0px -50px" });
+    reveals.forEach(el => observer.observe(el));
+
+    const header = document.querySelector(".site-header");
+    const onScroll = () => header?.classList.toggle("scrolled", window.scrollY > 16);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+  }
+
 });
