@@ -803,3 +803,143 @@ body::after{
     animation:none!important;
   }
 }
+
+/* ====== ALWAYS-VISIBLE CINEMATIC MOTION ====== */
+.blog-grid .blog-card{
+  position:relative;
+  overflow:hidden;
+  isolation:isolate;
+  border-color:rgba(168,85,247,.16);
+  animation:cardPop .75s var(--motion-ease) both, cardBreath 6s ease-in-out infinite;
+}
+.blog-grid .blog-card::after{
+  content:"";
+  position:absolute;
+  inset:-2px;
+  z-index:3;
+  border-radius:20px;
+  padding:1px;
+  background:linear-gradient(115deg,transparent 0 25%,rgba(168,85,247,.7) 42%,rgba(96,165,250,.55) 50%,transparent 68%);
+  background-size:240% 100%;
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;
+  mask-composite:exclude;
+  animation:borderSweep 4.8s linear infinite;
+  pointer-events:none;
+  opacity:.35;
+}
+.blog-grid .blog-card:hover::after{opacity:.85}
+
+.post-image{
+  isolation:isolate;
+  background-size:220% 220%!important;
+  animation:postGradient 8s ease-in-out infinite;
+}
+.post-image::before{
+  content:"";
+  position:absolute;
+  inset:-35%;
+  z-index:1;
+  background:
+    radial-gradient(circle at 20% 25%,rgba(255,255,255,.28),transparent 25%),
+    radial-gradient(circle at 80% 70%,rgba(168,85,247,.22),transparent 28%),
+    linear-gradient(115deg,transparent 35%,rgba(255,255,255,.24) 50%,transparent 65%);
+  transform:translateX(-18%) rotate(0deg);
+  animation:postLight 6s ease-in-out infinite;
+  pointer-events:none;
+}
+.post-image>*{
+  position:relative;
+  z-index:2;
+}
+.post-image b{
+  text-shadow:0 0 26px rgba(255,255,255,.34);
+  animation:numberFloat 3.4s ease-in-out infinite;
+}
+
+.blog-card:hover{
+  transform:translateY(-15px) scale(1.035) rotateX(4deg) rotateY(-2deg);
+  border-color:rgba(168,85,247,.65)!important;
+  box-shadow:
+    0 38px 110px rgba(67,56,120,.24),
+    0 0 0 1px rgba(168,85,247,.18),
+    0 0 55px rgba(168,85,247,.12);
+}
+.blog-card:hover .post-image{
+  transform:scale(1.10);
+  filter:saturate(1.18) contrast(1.04);
+}
+
+.category-grid a{
+  overflow:hidden;
+  background-size:180% 180%;
+  animation:categoryGlow 7s ease-in-out infinite;
+}
+.category-grid a::before{
+  background:
+    radial-gradient(circle at 15% 10%,rgba(168,85,247,.20),transparent 28%),
+    linear-gradient(110deg,transparent 28%,rgba(255,255,255,.06) 50%,transparent 72%);
+  background-size:100% 100%,220% 100%;
+  animation:categorySweep 5.5s linear infinite;
+}
+.category-grid a:hover{
+  transform:translateY(-8px) scale(1.025);
+  box-shadow:0 24px 70px rgba(16,21,34,.16),0 0 38px rgba(168,85,247,.10);
+}
+
+.newsletter{
+  animation:newsletterFloat 8s ease-in-out infinite;
+}
+
+.site-header{
+  backdrop-filter:blur(14px);
+}
+
+@keyframes borderSweep{
+  0%{background-position:220% 0}
+  100%{background-position:-220% 0}
+}
+@keyframes postGradient{
+  0%,100%{background-position:0% 50%}
+  50%{background-position:100% 50%}
+}
+@keyframes postLight{
+  0%,100%{transform:translateX(-28%) rotate(0deg);opacity:.45}
+  50%{transform:translateX(24%) rotate(6deg);opacity:.9}
+}
+@keyframes numberFloat{
+  0%,100%{transform:translateY(0);opacity:.12}
+  50%{transform:translateY(-7px);opacity:.24}
+}
+@keyframes cardBreath{
+  0%,100%{box-shadow:0 10px 34px rgba(16,21,34,.06)}
+  50%{box-shadow:0 18px 48px rgba(124,58,237,.09)}
+}
+@keyframes categoryGlow{
+  0%,100%{background-color:transparent;background-position:0% 0%}
+  50%{background-color:rgba(124,58,237,.025);background-position:100% 100%}
+}
+@keyframes categorySweep{
+  0%{background-position:0 0,240% 0}
+  100%{background-position:0 0,-240% 0}
+}
+@keyframes newsletterFloat{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-5px)}
+}
+
+html[data-theme="dark"] .blog-grid .blog-card{
+  border-color:rgba(168,85,247,.20);
+}
+html[data-theme="dark"] .blog-grid .blog-card:hover{
+  box-shadow:
+    0 40px 120px rgba(0,0,0,.5),
+    0 0 60px rgba(168,85,247,.16);
+}
+html[data-theme="dark"] .category-grid a:hover{
+  box-shadow:0 30px 90px rgba(0,0,0,.42),0 0 48px rgba(168,85,247,.14);
+}
+
+@media(max-width:850px){
+  .blog-grid .blog-card{animation:cardPop .75s var(--motion-ease) both}
+}
