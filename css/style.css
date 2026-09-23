@@ -973,3 +973,102 @@ html[data-theme="dark"] .category-grid a:hover{
 @media(max-width:850px){
   #hero-canvas{opacity:.48}
 }
+
+/* ====== HERO FALLBACK SCENE — independent of external JS ====== */
+.hero-art{
+  background:
+    radial-gradient(circle at 55% 45%, rgba(168,85,247,.18), transparent 22%),
+    radial-gradient(circle at 80% 15%, rgba(96,165,250,.16), transparent 25%),
+    linear-gradient(145deg,#f3efff,#f8f7ff 52%,#eef2ff);
+}
+.scene-grid{
+  position:absolute;
+  inset:-35%;
+  z-index:0;
+  opacity:.28;
+  background-image:
+    linear-gradient(rgba(124,58,237,.16) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(96,165,250,.13) 1px,transparent 1px);
+  background-size:42px 42px;
+  transform:perspective(500px) rotateX(62deg) scale(1.35) translateY(20%);
+  transform-origin:center bottom;
+  animation:gridPan 9s linear infinite;
+}
+.scene-core{
+  position:absolute;
+  left:50%;
+  top:50%;
+  width:250px;
+  height:250px;
+  transform:translate(-50%,-50%);
+  z-index:1;
+  transform-style:preserve-3d;
+  perspective:900px;
+  filter:drop-shadow(0 24px 45px rgba(124,58,237,.18));
+}
+.scene-sphere{
+  position:absolute;
+  width:92px;
+  height:92px;
+  left:79px;
+  top:79px;
+  border-radius:50%;
+  background:
+    radial-gradient(circle at 32% 28%,#fff 0 6%,#ddd6fe 12%,#a855f7 42%,#4c1d95 75%,#17102d 100%);
+  box-shadow:0 0 30px rgba(168,85,247,.55),0 0 90px rgba(124,58,237,.24);
+  animation:spherePulse 3.6s ease-in-out infinite;
+}
+.scene-sphere::after{
+  content:"";
+  position:absolute;
+  inset:-10px;
+  border-radius:50%;
+  border:1px solid rgba(255,255,255,.45);
+  box-shadow:0 0 24px rgba(192,132,252,.42);
+  animation:sphereHalo 2.6s ease-in-out infinite;
+}
+.scene-ring{
+  position:absolute;
+  left:50%;
+  top:50%;
+  width:210px;
+  height:72px;
+  margin-left:-105px;
+  margin-top:-36px;
+  border:2px solid rgba(168,85,247,.54);
+  border-radius:50%;
+  box-shadow:0 0 24px rgba(168,85,247,.16);
+  transform-style:preserve-3d;
+}
+.ring-a{transform:rotateX(64deg) rotateZ(0deg);animation:ringA 6s linear infinite}
+.ring-b{transform:rotateY(66deg) rotateZ(25deg);border-color:rgba(96,165,250,.5);animation:ringB 7s linear infinite reverse}
+.ring-c{transform:rotateX(38deg) rotateY(50deg) rotateZ(70deg);border-color:rgba(192,132,252,.42);animation:ringC 8s linear infinite}
+.scene-stars{
+  position:absolute;
+  inset:-30px;
+  border-radius:50%;
+  background:
+    radial-gradient(circle at 18% 25%,rgba(124,58,237,.75) 0 1.5px,transparent 2px),
+    radial-gradient(circle at 78% 22%,rgba(96,165,250,.8) 0 1.5px,transparent 2px),
+    radial-gradient(circle at 85% 72%,rgba(192,132,252,.8) 0 1.5px,transparent 2px),
+    radial-gradient(circle at 18% 78%,rgba(124,58,237,.62) 0 1px,transparent 2px),
+    radial-gradient(circle at 51% 5%,rgba(255,255,255,.85) 0 1px,transparent 2px);
+  animation:starsSpin 16s linear infinite;
+}
+.hero-card{
+  z-index:4!important;
+}
+@keyframes gridPan{from{background-position:0 0}to{background-position:42px 42px}}
+@keyframes spherePulse{0%,100%{transform:scale(.93);box-shadow:0 0 30px rgba(168,85,247,.5),0 0 90px rgba(124,58,237,.2)}50%{transform:scale(1.08);box-shadow:0 0 42px rgba(168,85,247,.8),0 0 130px rgba(124,58,237,.35)}}
+@keyframes sphereHalo{0%,100%{transform:scale(.88);opacity:.35}50%{transform:scale(1.18);opacity:.9}}
+@keyframes ringA{to{transform:rotateX(64deg) rotateZ(360deg)}}
+@keyframes ringB{to{transform:rotateY(66deg) rotateZ(-335deg)}}
+@keyframes ringC{to{transform:rotateX(38deg) rotateY(410deg) rotateZ(70deg)}}
+@keyframes starsSpin{to{transform:rotate(360deg)}}
+@media(max-width:850px){
+ .scene-core{transform:translate(-50%,-50%) scale(.75)}
+ .scene-grid{opacity:.18}
+}
+@media(prefers-reduced-motion:reduce){
+ .scene-grid,.scene-sphere,.scene-sphere::after,.ring-a,.ring-b,.ring-c,.scene-stars{animation:none!important}
+}
