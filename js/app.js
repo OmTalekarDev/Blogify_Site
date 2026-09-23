@@ -581,4 +581,70 @@ document.addEventListener("DOMContentLoaded", () => {
     window.addEventListener("scroll", onScroll, { passive: true });
   }
 
+  if (!reducedMotion) {
+    // Global scroll progress + cinematic scroll state.
+    const updateScrollState = () => {
+      const doc = document.documentElement;
+      const max = Math.max(1, doc.scrollHeight - window.innerHeight);
+      const progress = Math.min(1, Math.max(0, window.scrollY / max));
+      doc.style.setProperty("--scroll-progress", progress);
+      doc.style.setProperty("--scroll-y", window.scrollY + "px");
+    };
+    updateScrollState();
+    window.addEventListener("scroll", updateScrollState, { passive: true });
+
+    // Lightweight cursor trail on desktop.
+    if (window.innerWidth > 850) {
+      const trail = Array.from({ length: 7 }, (_, i) => {
+        const node = document.createElement("span");
+        node.className = "cursor-trail" + (i > 3 ? " small" : "");
+        node.style.opacity = String(Math.max(.08, .55 - i * .065));
+        document.body.appendChild(node);
+        return { node, x: innerWidth / 2, y: innerHeight / 2, delay: i + 1 };
+      });
+      let mouseX = innerWidth / 2;
+      let mouseY = innerHeight / 2;
+      document.addEventListener("mousemove", e => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+      }, { passive: true });
+
+      const animateTrail = () => {
+        let leadX = mouseX;
+        let leadY = mouseY;
+        trail.forEach(item => {
+          item.x += (leadX - item.x) * (.18 - Math.min(.07, item.delay * .007));
+          item.y += (leadY - item.y) * (.18 - Math.min(.07, item.delay * .007));
+          item.node.style.left = item.x + "px";
+          item.node.style.top = item.y + "px";
+          leadX = item.x;
+          leadY = item.y;
+        });
+        requestAnimationFrame(animateTrail);
+      };
+      requestAnimationFrame(animateTrail);
+    }
+
+    // Add a slight depth response to cards while scrolling.
+    const depthCards = document.querySelectorAll(".blog-card, .category-grid a, .stat-card");
+    const updateDepth = () => {
+      const vh = window.innerHeight;
+      depthCards.forEach(card => {
+        const r = card.getBoundingClientRect();
+        if (r.bottom < -80 || r.top > vh + 80) return;
+        const center = (r.top + r.height / 2) / vh;
+        const shift = (center - .5) * -5;
+        card.style.setProperty("--depth-shift", shift.toFixed(2) + "deg");
+      });
+    };
+    updateDepth();
+    window.addEventListener("scroll", updateDepth, { passive: true });
+
+    // Add a soft spotlight to the entire page and keep it responsive to movement.
+    const spotlight = document.querySelector(".cursor-glow");
+    if (spotlight) {
+      spotlight.style.mixBlendMode = "screen";
+    }
+  }
+
 });
