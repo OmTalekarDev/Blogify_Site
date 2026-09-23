@@ -647,4 +647,132 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  // Cinematic scroll layer: independent of GSAP/Three.js and always visible.
+  if (!reducedMotion) {
+    document.body.classList.add("cinematic-scroll");
+
+    const hero = document.querySelector(".hero");
+    const heroArt = document.querySelector(".cinematic-hero");
+
+    if (hero && heroArt) {
+      const hint = document.createElement("div");
+      hint.className = "hero-scroll-hint";
+      hint.innerHTML = "<span>Scroll to explore</span><i></i>";
+      heroArt.appendChild(hint);
+    }
+
+    // Give each major content block its own ambient light source.
+    document.querySelectorAll(".section, .categories, .newsletter").forEach(section => {
+      if (!section.querySelector(":scope > .cinematic-section-glow")) {
+        const glow = document.createElement("div");
+        glow.className = "cinematic-section-glow";
+        glow.setAttribute("aria-hidden", "true");
+        section.appendChild(glow);
+      }
+    });
+
+    // Animated divider under section headings.
+    document.querySelectorAll(".section-head h2").forEach(h2 => {
+      const line = document.createElement("div");
+      line.className = "cinematic-divider";
+      line.setAttribute("aria-hidden", "true");
+      h2.insertAdjacentElement("afterend", line);
+    });
+
+    const scrollElements = () => {
+      const y = window.scrollY || 0;
+      const vh = window.innerHeight || 1;
+      const heroH = hero ? hero.offsetHeight : 650;
+
+      // Hero layers move at deliberately different speeds.
+      document.documentElement.style.setProperty("--scroll-y-px", y + "px");
+      document.documentElement.style.setProperty(
+        "--hero-copy-shift",
+        Math.max(-72, -y * 0.14) + "px"
+      );
+      document.documentElement.style.setProperty(
+        "--hero-art-shift",
+        Math.min(52, y * 0.065) + "px"
+      );
+
+      if (heroArt) {
+        const heroRect = heroArt.getBoundingClientRect();
+        const center = heroRect.top + heroRect.height / 2;
+        const delta = center - vh / 2;
+        heroArt.style.setProperty("--scene-card-y", (-delta * 0.065).toFixed(1) + "px");
+        heroArt.style.setProperty("--scene-card-r", (delta / vh * 2.2).toFixed(2) + "deg");
+        heroArt.style.setProperty("--scene-card-s", Math.max(.96, 1 - Math.abs(delta / vh) * .025).toFixed(3));
+        heroArt.style.setProperty("--scene-core-y", (-delta * 0.035).toFixed(1) + "px");
+
+        heroArt.querySelectorAll(".hero-chip").forEach((chip, index) => {
+          const dir = index % 2 === 0 ? 1 : -1;
+          chip.style.setProperty("--chip-x", (delta / vh * 16 * dir).toFixed(1) + "px");
+          chip.style.setProperty("--chip-y", (-delta / vh * 10).toFixed(1) + "px");
+        });
+      }
+
+      // Cards form a small "wave" while entering the viewport.
+      document.querySelectorAll(".blog-card").forEach((card, index) => {
+        const r = card.getBoundingClientRect();
+        if (r.bottom < -120 || r.top > vh + 120) return;
+        const progress = (r.top + r.height / 2 - vh * .5) / vh;
+        const clamped = Math.max(-1, Math.min(1, progress));
+        const direction = index % 2 === 0 ? 1 : -1;
+        card.style.setProperty("--card-scroll-x", (clamped * 10 * direction).toFixed(1) + "px");
+        card.style.setProperty("--card-scroll-y", (-clamped * 22).toFixed(1) + "px");
+        card.style.setProperty("--card-scroll-r", (clamped * 1.4 * direction).toFixed(2) + "deg");
+        card.style.setProperty("--card-scroll-s", Math.min(1.018, 1.008 - Math.abs(clamped) * .009).toFixed(3));
+      });
+
+      // Topic tiles sweep in from alternating sides.
+      document.querySelectorAll(".category-grid a").forEach((item, index) => {
+        const r = item.getBoundingClientRect();
+        if (r.bottom < -100 || r.top > vh + 100) return;
+        const p = Math.max(-1, Math.min(1, (r.top - vh * .72) / (vh * .72)));
+        const side = index % 2 === 0 ? -1 : 1;
+        item.style.setProperty("--topic-x", (p * 24 * side).toFixed(1) + "px");
+        item.style.setProperty("--topic-y", (-Math.abs(p) * 6).toFixed(1) + "px");
+        item.style.setProperty("--topic-r", (p * 1.8 * side).toFixed(2) + "deg");
+      });
+
+      document.querySelectorAll(".section-head, .categories .section-head").forEach(head => {
+        const r = head.getBoundingClientRect();
+        const p = Math.max(-1, Math.min(1, (r.top - vh * .75) / (vh * .75)));
+        head.style.setProperty("--heading-y", (p * 24).toFixed(1) + "px");
+        head.style.setProperty("--heading-o", Math.max(.45, 1 - Math.abs(p) * .55).toFixed(2));
+        head.style.setProperty("--heading-s", Math.min(1.035, 1.015 - Math.abs(p) * .02).toFixed(3));
+      });
+
+      const newsletter = document.querySelector(".newsletter");
+      if (newsletter) {
+        const r = newsletter.getBoundingClientRect();
+        const p = Math.max(-1, Math.min(1, (r.top - vh * .75) / vh));
+        newsletter.style.setProperty("--newsletter-y", (-p * 20).toFixed(1) + "px");
+        newsletter.style.setProperty("--newsletter-s", Math.min(1.012, 1 + (1 - Math.abs(p)) * .012).toFixed(3));
+      }
+
+      document.querySelectorAll(".section, .categories, .newsletter").forEach(section => {
+        const r = section.getBoundingClientRect();
+        const active = r.top < vh * .75 && r.bottom > vh * .2;
+        const glow = section.querySelector(":scope > .cinematic-section-glow");
+        if (glow) glow.classList.toggle("is-live", active);
+        const divider = section.querySelector(".cinematic-divider");
+        if (divider) divider.classList.toggle("is-live", active);
+      });
+    };
+
+    let ticking = false;
+    const requestScrollFrame = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        scrollElements();
+        ticking = false;
+      });
+    };
+    scrollElements();
+    window.addEventListener("scroll", requestScrollFrame, { passive: true });
+    window.addEventListener("resize", requestScrollFrame, { passive: true });
+  }
+
 });
